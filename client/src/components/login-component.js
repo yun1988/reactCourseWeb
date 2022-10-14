@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import AuthService from "../services/auth.service";
 
@@ -25,10 +25,6 @@ const LoginComponent = (props) => {
         }
         setScMessage(loginSuccessMessage)
         setCurrentUser(AuthService.getCurrentUser());
-        console.log ('currentUser1',AuthService.getCurrentUser())
-        console.log ('currentUser2',currentUser)
-        currentUser = AuthService.getCurrentUser()
-        console.log ('currentUser3',currentUser)
         navigate("/profile");
       })
       .catch((error) => {
