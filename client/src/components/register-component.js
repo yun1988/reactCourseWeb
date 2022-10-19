@@ -4,14 +4,13 @@ import AuthService from "../services/auth.service";
 
 const RegisterComponent = () => {
   const navigate = useNavigate();
+  const successMessageWord = "Registration succeeds. You are now redirected to the login page.";
   let [username, setUsername] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [role, setRole] = useState("");
   let [message, setMessage] = useState("");
   let [successMessage, setScMessage] = useState("");
-  let successMessageWord = "Registration succeeds. You are now redirected to the login page.";
-
 
   const handleChangeUsername = (e) => {
     setUsername(e.target.value);
