@@ -1,31 +1,57 @@
-import React, { useState } from "react";
+import React, { useState , useReducer} from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
+
+// register reducer function
+import { registerReducer } from './register-reducer.js';
 
 const RegisterComponent = () => {
   const navigate = useNavigate();
   const successMessageWord = "Registration succeeds. You are now redirected to the login page.";
-  let [username, setUsername] = useState("");
-  let [email, setEmail] = useState("");
-  let [password, setPassword] = useState("");
-  let [role, setRole] = useState("");
   let [message, setMessage] = useState("");
   let [successMessage, setScMessage] = useState("");
+  
+  // useState function
+  // let [username, setUsername] = useState("");
+  // let [username, setUsername] = useState("");
+  // let [email, setEmail] = useState("");
+  // let [password, setPassword] = useState("");
+  // let [role, setRole] = useState("");
 
-  const handleChangeUsername = (e) => {
-    setUsername(e.target.value);
+  // useReducer function
+  const initState = {
+    username: null,
+    email:null,
+    password: null,
+    role:null,
+  }
+  const [state, dispatch] = useReducer(registerReducer, initState)
+  
+  // useState function
+  // const handleChangeUsername = (e) => {
+  //   setUsername(e.target.value);
+  // };
+  // const handleChangeEmail = (e) => {
+  //   setEmail(e.target.value);
+  // };
+  // const handleChangePassword = (e) => {
+  //   setPassword(e.target.value);
+  // };
+  // const handleChnageRole = (e) => {
+  //   setRole(e.target.value);
+  // };
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    const changeValue = { name, value };
+    dispatch({ type: 'CHANGE_ITEM', changeValue: changeValue });
   };
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleChnageRole = (e) => {
-    setRole(e.target.value);
-  };
+  
+
   const handleRegister = () => {
-    AuthService.register(username, email, password, role)
+    dispatch({ type: 'REGISTER'});    
+    AuthService.register(state.username,state.email,state.password,state.role)
       .then((data) => {
         setScMessage(successMessageWord)
         navigate("/login");
@@ -44,7 +70,7 @@ const RegisterComponent = () => {
         <div>
           <label htmlFor="username">Username</label>
           <input
-            onChange={handleChangeUsername}
+            onChange={handleChange}
             type="text"
             className="form-control"
             name="username"
@@ -54,7 +80,7 @@ const RegisterComponent = () => {
         <div className="form-group">
           <label htmlFor="email">email</label>
           <input
-            onChange={handleChangeEmail}
+            onChange={handleChange}
             type="text"
             className="form-control"
             name="email"
@@ -64,7 +90,7 @@ const RegisterComponent = () => {
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
-            onChange={handleChangePassword}
+            onChange={handleChange}
             type="password"
             className="form-control"
             name="password"
@@ -74,7 +100,7 @@ const RegisterComponent = () => {
         <div className="form-group">
           <label htmlFor="password">role</label>
           <input
-            onChange={handleChnageRole}
+            onChange={handleChange}
             type="text"
             className="form-control"
             name="role"
