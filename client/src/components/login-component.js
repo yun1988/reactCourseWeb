@@ -1,23 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useReducer} from "react";
 import { useNavigate } from "react-router";
 import AuthService from "../services/auth.service";
+
+// register reducer function
+import { loginReducer } from './login-reducer.js';
 
 const LoginComponent = (props) => {
   const navigate = useNavigate();
   let { currentUser, setCurrentUser } = props;
-  let [email, setEmail] = useState("");
-  let [password, setPassword] = useState("");
-  let [message, setMessage] = useState("");
   let [successMessage, setScMessage] = useState("");
   let loginSuccessMessage = "Login successfully, you are now redirected to the profile page."
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
+  let [message, setMessage] = useState("");
+  
+  // useState function
+  // let [email, setEmail] = useState("");
+  // let [password, setPassword] = useState("");
+
+  // useReducer initState
+  const initState = {
+    email: null,
+    password:null
+  }
+  const [state, dispatch] = useReducer(loginReducer, initState)
+
+  // useState function
+  // const handleChangeEmail = (e) => {
+  //   setEmail(e.target.value);
+  // };
+  // const handleChangePassword = (e) => {
+  //   setPassword(e.target.value);
+  // };
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    const changeValue = { name, value };
+    dispatch({ type: 'CHANGE_ITEM', changeValue: changeValue });
   };
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
+  
   const handleLogin = () => {
-    AuthService.login(email, password)
+    dispatch({ type: 'LOGIN'});  
+    AuthService.login(state.email, state.password)
       .then((response) => {
         console.log(response.data);
         if (response.data.token) {
@@ -49,7 +72,7 @@ const LoginComponent = (props) => {
         <div className="form-group">
           <label htmlFor="username">Email</label>
           <input
-            onChange={handleChangeEmail}
+            onChange={handleChange}
             type="text"
             className="form-control"
             name="email"
@@ -59,7 +82,7 @@ const LoginComponent = (props) => {
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
-            onChange={handleChangePassword}
+            onChange={handleChange}
             type="password"
             className="form-control"
             name="password"
